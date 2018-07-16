@@ -307,6 +307,155 @@ template-name:
 
 
   
+    <article id="post-ten" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/10/ten/">vue源码的浅解析</a>
+    </h1>
+  
+
+        
+        <a href="/2018/06/10/ten/" class="archive-article-date">
+  	<time datetime="2018-06-10T02:03:31.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-10</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h4 id="vue是当下前端比较火的框架，中文地址：vue中文文档"><a href="#vue是当下前端比较火的框架，中文地址：vue中文文档" class="headerlink" title="vue是当下前端比较火的框架，中文地址：vue中文文档"></a>vue是当下前端比较火的框架，中文地址：<a href="https://cn.vuejs.org/v2/guide/" target="_blank" rel="noopener">vue中文文档</a></h4><p>翻看源码：<br>在其工程目录src下发现如下文件夹：</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163aeceaec0dcdcb?w=209&amp;h=399&amp;f=png&amp;s=27786" alt=""><br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">1. /compiler   目录是编译模板；</span><br><span class="line">2. /core       目录是vue.js的核心</span><br><span class="line">3. /planforms  目录是针对核心模块的‘平台’模块 （web   weex）</span><br><span class="line">4. /server     目录是处理服务端渲染；</span><br><span class="line">5. /sfc        目录是处理单文件.vue;</span><br><span class="line">6. /shared     目录是提供全局用到的工具函数</span><br></pre></td></tr></table></figure></p>
+<p>vue.js的组成是有core + 对应的‘平台’补充代码构成（独立构建和运行时构建只是platforms下web平台的两种选择）</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163aeda00e0aecd3?w=1286&amp;h=651&amp;f=png&amp;s=174964" alt=""></p>
+<h4 id="vue的双向数据绑定"><a href="#vue的双向数据绑定" class="headerlink" title="vue的双向数据绑定"></a>vue的双向数据绑定</h4><p>双向绑定（响应式原理）所涉及到的技术<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">1. Object.defineProperty</span><br><span class="line">2. Observer</span><br><span class="line">3. Watcher</span><br><span class="line">4. Dep</span><br><span class="line">5. Directive</span><br></pre></td></tr></table></figure></p>
+<p><strong>1. Object.defineProperty</strong></p>
+<pre><code>var obj = {};
+var a;
+Object.defineProperty(obj,&apos;a&apos;,{
+  get: function(){
+    console.log(&apos;get val&apos;);
+    return a;
+  },
+  set: function(newVal){
+    console.log(&apos;set val:&apos; + newVal);
+    a = newVal;
+  }
+});
+obj.a // get val;
+obj.a = &apos;111&apos;; // set val:111
+</code></pre><p>  双向数据绑定</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b057d5eef26d4?w=2578&amp;h=1934&amp;f=jpeg&amp;s=331992" alt=""></p>
+<p><strong>2. Observer</strong></p>
+<pre><code>观察者模式是软件设计模式的一种。
+在此种模式中，一个目标对象管理所有相依于它的观察者对象，并且在它本身的状态改变时主动发出通知。
+这通常透过呼叫各观察者所提供的 方法来实现。此种模式通常被用来实时事件处理系统。           
+订阅者模式涉及三个对象:发布者、主题对象、订阅者，三个对象间的是一对多的关系， 每当主题对象状态发生改变时，其相关依赖对象都会得到通知，并被自动更新。
+例如：
+</code></pre><p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b064678a6624f?w=1331&amp;h=629&amp;f=png&amp;s=368501" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b065f65c10fef?w=1322&amp;h=863&amp;f=png&amp;s=536362" alt=""></p>
+<p>vue里边怎么操作的呢？</p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b06d1f415e822?w=1291&amp;h=849&amp;f=png&amp;s=339587" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b070d8e4b6a9e?w=1206&amp;h=1006&amp;f=png&amp;s=450235" alt=""></p>
+<p><strong>3. watcher</strong></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b0737c36c30ac?w=2692&amp;h=1616&amp;f=jpeg&amp;s=466921" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b07b38237a7d3?w=1291&amp;h=783&amp;f=png&amp;s=469262" alt=""></p>
+<p><strong>4. Dep</strong></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b07d507a3a023?w=1245&amp;h=834&amp;f=png&amp;s=375363" alt=""></p>
+<p><strong>5. Directive</strong></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b07f27d9c6dd5?w=1128&amp;h=636&amp;f=png&amp;s=128522" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b080778f306bf?w=1342&amp;h=984&amp;f=png&amp;s=461174" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b08342c057380?w=1276&amp;h=885&amp;f=png&amp;s=344877" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b08377d6f6de5?w=1251&amp;h=664&amp;f=png&amp;s=372528" alt=""></p>
+<p><img src="https://user-gold-cdn.xitu.io/2018/5/30/163b084903372c6e?w=1271&amp;h=813&amp;f=png&amp;s=257522" alt=""></p>
+<h3 id="疑问一-vue哪来的？"><a href="#疑问一-vue哪来的？" class="headerlink" title="疑问一    vue哪来的？"></a>疑问一    vue哪来的？</h3><pre><code> function Vue(options) {
+    this.data = options.data;
+    var data = this.data;
+    observe(data, this);
+    var id = options.el;
+    var dom = new Compile(document.getElementById(id), this);
+    // 编译完成后，将dom返回到app中
+    document.getElementById(id).appendChild(dom);
+}
+</code></pre><p>是通过上述方法实例化的一个对象；但是里边有两个未知生物 <strong>observe ？</strong> <strong>Compile?</strong></p>
+<h3 id="observer-js"><a href="#observer-js" class="headerlink" title="observer.js"></a>observer.js</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">&lt;!--定义 observe方法 --&gt;</span><br><span class="line">function observe(obj, vm) &#123;</span><br><span class="line">  Object.keys(obj).forEach(function (key) &#123;</span><br><span class="line">    defineReactive(vm, key, obj[key]);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br><span class="line">function defineReactive(obj, key, val) &#123;</span><br><span class="line"></span><br><span class="line">  var dep = new Dep();</span><br><span class="line">  Object.defineProperty(obj, key, &#123;</span><br><span class="line">    get: function () &#123;</span><br><span class="line">      //添加订阅者watcher到主题对象Dep</span><br><span class="line">      if (Dep.target) &#123;</span><br><span class="line">        // JS的浏览器单线程特性，保证这个全局变量在同一时间内，只会有同一个监听器使用</span><br><span class="line">        dep.addSub(Dep.target);</span><br><span class="line">      &#125;</span><br><span class="line">      return val;</span><br><span class="line">    &#125;,</span><br><span class="line">    set: function (newVal) &#123;</span><br><span class="line">      if (newVal === val) return;</span><br><span class="line">      val = newVal;</span><br><span class="line">      console.log(val);</span><br><span class="line">      // 作为发布者发出通知</span><br><span class="line">      dep.notify();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>有oberver方法，就是初始观察者，去遍历它自身的属性，然后defineReactive（定义一些反应）（key + value + vm）,然后给vm设置key的value（即set和get方法）； <strong> Dep()???</strong></p>
+<h4 id="Dep-js"><a href="#Dep-js" class="headerlink" title="Dep.js"></a>Dep.js</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">function Dep() &#123;</span><br><span class="line">  this.subs = [];</span><br><span class="line">&#125;</span><br><span class="line">Dep.prototype = &#123;</span><br><span class="line">  // 添加订阅事件</span><br><span class="line">  addSub: function (sub) &#123;</span><br><span class="line">    this.subs.push(sub);</span><br><span class="line">  &#125;,</span><br><span class="line">  // 添加发布通知事件</span><br><span class="line">  notify: function () &#123;</span><br><span class="line">    this.subs.forEach(function (sub) &#123;</span><br><span class="line">      sub.update();</span><br><span class="line">    &#125;)</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>明白了，在观察者看来，我需要有人订阅我的消息，添加一个dep对象(主题对象)；然后我给它添加订阅，然后我作为消息的发出者给订阅者发消息；</p>
+<h4 id="compile"><a href="#compile" class="headerlink" title="compile"></a>compile</h4><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line">function Compile(node, vm) &#123;</span><br><span class="line">  if (node) &#123;</span><br><span class="line">    this.$frag = this.nodeToFragment(node, vm);</span><br><span class="line">    return this.$frag;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">Compile.prototype = &#123;</span><br><span class="line">  nodeToFragment: function (node, vm) &#123;</span><br><span class="line">    var self = this;</span><br><span class="line">    var frag = document.createDocumentFragment();</span><br><span class="line">    var child;</span><br><span class="line"></span><br><span class="line">    while (child = node.firstChild) &#123;</span><br><span class="line">      self.compileElement(child, vm);</span><br><span class="line">      frag.append(child); // 将所有子节点添加到fragment中</span><br><span class="line">    &#125;</span><br><span class="line">    return frag;</span><br><span class="line">  &#125;,</span><br><span class="line">  compileElement: function (node, vm) &#123;</span><br><span class="line">    var reg = /\&#123;\&#123;(.*)\&#125;\&#125;/;</span><br><span class="line"></span><br><span class="line">    //节点类型为元素</span><br><span class="line">    if (node.nodeType === 1) &#123;</span><br><span class="line">      var attr = node.attributes;</span><br><span class="line">      // 解析属性</span><br><span class="line">      for (var i = 0; i &lt; attr.length; i++) &#123;</span><br><span class="line">        if (attr[i].nodeName == &apos;v-model&apos;) &#123;</span><br><span class="line">          var name = attr[i].nodeValue; // 获取v-model绑定的属性名</span><br><span class="line">          node.addEventListener(&apos;input&apos;, function (e) &#123;</span><br><span class="line">            // 给相应的data属性赋值，进而触发该属性的set方法</span><br><span class="line">            vm[name] = e.target.value;</span><br><span class="line">          &#125;);</span><br><span class="line">          // node.value = vm[name]; // 将data的值赋给该node</span><br><span class="line">          new Watcher(vm, node, name, &apos;value&apos;);</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">    //节点类型为text</span><br><span class="line">    if (node.nodeType === 3) &#123;</span><br><span class="line">      if (reg.test(node.nodeValue)) &#123;</span><br><span class="line">        var name = RegExp.$1; // 获取匹配到的字符串</span><br><span class="line">        name = name.trim();</span><br><span class="line">        // node.nodeValue = vm[name]; // 将data的值赋给该node</span><br><span class="line">        new Watcher(vm, node, name, &apos;nodeValue&apos;);</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>编译，就是创建节点，然后根据节点类型，然后去进行赋值操作，   <strong>watcher???</strong></p>
+<h3 id="watch-js"><a href="#watch-js" class="headerlink" title="watch.js"></a>watch.js</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">function Watcher(vm, node, name, type) &#123;</span><br><span class="line">    Dep.target = this;</span><br><span class="line">    this.name = name;</span><br><span class="line">    this.node = node;</span><br><span class="line">    this.vm = vm;</span><br><span class="line">    this.type = type;</span><br><span class="line">    this.update();</span><br><span class="line">    Dep.target = null;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">Watcher.prototype = &#123;</span><br><span class="line">    update: function() &#123;</span><br><span class="line">        this.get();</span><br><span class="line">        var batcher = new Batcher();</span><br><span class="line">        batcher.push(this);</span><br><span class="line">        // this.node[this.type] = this.value; // 订阅者执行相应操作</span><br><span class="line">    &#125;,</span><br><span class="line">    cb:function()&#123;</span><br><span class="line">        this.node[this.type] = this.value; // 订阅者执行相应操作</span><br><span class="line">    &#125;,</span><br><span class="line">    // 获取data的属性值</span><br><span class="line">    get: function() &#123;</span><br><span class="line">        this.value = this.vm[this.name]; //触发相应属性的get</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>就是订阅者模式中的订阅者了，接收四个参数，vm（实例），node(节点)，name(属性key), type(节点类型了)；做三个操作，get（获取值），update(值)，cb(保持原值)； <strong> Batcher????</strong></p>
+<h3 id="Batcher-js"><a href="#Batcher-js" class="headerlink" title="Batcher.js"></a>Batcher.js</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">/**</span><br><span class="line"> * 批处理构造函数</span><br><span class="line"> * @constructor</span><br><span class="line"> */</span><br><span class="line">function Batcher() &#123;</span><br><span class="line">    this.reset();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 批处理重置</span><br><span class="line"> */</span><br><span class="line">Batcher.prototype.reset = function () &#123;</span><br><span class="line">    this.has = &#123;&#125;;</span><br><span class="line">    this.queue = [];</span><br><span class="line">    this.waiting = false;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 将事件添加到队列中</span><br><span class="line"> * @param job &#123;Watcher&#125; watcher事件</span><br><span class="line"> */</span><br><span class="line">Batcher.prototype.push = function (job) &#123;</span><br><span class="line">    if (!this.has[job.name]) &#123;</span><br><span class="line">        this.queue.push(job);</span><br><span class="line">        this.has[job.name] = job;</span><br><span class="line">        if (!this.waiting) &#123;</span><br><span class="line">            this.waiting = true;</span><br><span class="line">            setTimeout(() =&gt; &#123;</span><br><span class="line">                this.flush();</span><br><span class="line">            &#125;);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 执行并清空事件队列</span><br><span class="line"> */</span><br><span class="line">Batcher.prototype.flush = function () &#123;</span><br><span class="line">    this.queue.forEach((job) =&gt; &#123;</span><br><span class="line">        job.cb();</span><br><span class="line">    &#125;);</span><br><span class="line">    this.reset();</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<p>这里边就是批量处理的函数了，事件队列的相关知识了，执行三个操作 </p>
+<ol>
+<li>reset(批处理重置)   </li>
+<li>push( 将事件添加到队列中)  </li>
+<li>flush(执行并清空事件队列) ;      </li>
+</ol>
+<p>现在我们回过头去看整个事件，串起来就是vue的实现机制了….</p>
+<p>源码看：<a href="https://github.com/ruiyongsheng/simple-vue" target="_blank" rel="noopener">github地址</a></p>
+<p>未完待续……</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color4">vue</a>
+        		</li>
+      		 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">源码</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/06/10/ten/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-nine" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1493,6 +1642,14 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">音乐</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">music</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">前端</a>
               </li>
              
@@ -1509,19 +1666,15 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">音乐</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">music</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color1">https</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">源码</a>
               </li>
             
             <div class="clearfix"></div>
