@@ -6,12 +6,12 @@
   <meta name="renderer" content="webkit">
   <meta http-equiv="X-UA-Compatible" content="IE=edge" >
   <link rel="dns-prefetch" href="http://yoursite.com">
-  <title>Category: 音乐 | rys</title>
+  <title>rys</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
   <meta name="description" content="欢迎来到逗比娃儿的世界">
 <meta property="og:type" content="website">
 <meta property="og:title" content="rys">
-<meta property="og:url" content="http://yoursite.com/categories/音乐/index.html">
+<meta property="og:url" content="http://yoursite.com/page/2/index.html">
 <meta property="og:site_name" content="rys">
 <meta property="og:description" content="欢迎来到逗比娃儿的世界">
 <meta property="og:locale" content="default">
@@ -157,242 +157,158 @@
           <div id="js-content" class="content-ll">
             
   
-  
+    <article id="post-first" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
     
-    
-      
-      
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2018" class="archive-year">2018</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2018/04/06/four/" class="archive-article-date">
-  	<time datetime="2018-04-06T14:38:54.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-04-06</time>
-</a>
-        </div>
-    	 
+      <header class="article-header">
+        
   
     <h1 itemprop="name">
-      <a class="archive-article-title" href="/2018/04/06/four/">不可撤销 —— 《嫁给我》</a>
+      <a class="article-title" href="/2017/04/01/first/">先学会走路————用Hexo + github搭建自己的博客！</a>
     </h1>
   
 
-        <div class="article-info info-on-right">
-          
+        
+        <a href="/2017/04/01/first/" class="archive-article-date">
+  	<time datetime="2017-04-01T08:59:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-01</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>用Hexo在本地搭建一个博客<br>所需环境 nodejs</p>
+<p>安装 <a href="https://nodejs.org/zh-cn/" target="_blank" rel="noopener">nodejs</a>；<br>安装 <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">git</a><br>选择自己电脑对应的版本下载安装</p>
+<p>使用npm安装Hexo的脚手架工具 hexo-cli</p>
+<pre><code>npm install -g hexo-cli
+</code></pre><p>快速开始</p>
+<p>随便找个文件夹下打开终端,输入</p>
+<pre><code>hexo i blog  // init的缩写 blog是项目名
+cd blog   //切换到站点根目录
+npm install // 安装初始镜像包
+hexo g  //generetor的缩写
+hexo s //server的缩写
+</code></pre><p>打开浏览器输入localhost:4000查看：<br>这个就是hexo默认的博客主题。现在你已经可以在这个主题下写博客了。<br>当然，我是不喜欢这样的，幸好，github上有大量的主题可供选择，这里我选择使用nexT主题。<br>选择主题–nexT</p>
+<p>在根目录blog输入</p>
+<pre><code>git clone https://github.com/iissnan/hexo-theme-next
+</code></pre><p>完成后,这代表网站主题已经安装完成，这时候只需要自定义主题了，就找到thems/next下的 _config.yml, 这个就是主题的配置文件</p>
+<p>然后自定义自己的内容，找到thems字段，设置成next;</p>
+<p>在终端输入</p>
+<pre><code>hexo clean  //清除缓存
+hexo g  //重新生成代码
+hexo s  //部署到本地
+</code></pre><p>//然后打开浏览器访问 localhost:4000 查看效果</p>
+<p>nexT主题有三种选择，这个只是最简洁的一种，我们选择最好看的那个。<br>Muse - 默认 Scheme，这是 NexT 最初的版本，黑白主调，大量留白<br>Mist - Muse 的紧凑版本，整洁有序的单栏外观<br>Pisces - 双栏 Scheme，小家碧玉似的清新</p>
+<p>配置next</p>
+<p>当然，你完全可以进行很多的自定义设置甚至修改源码，定制自己的主题。更多的设置请移步官方文档 <a href="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">next主题设置</a></p>
+<p>将本地博客上传到github<br>话不多做，直接开始。<br>将博客部署到github</p>
+<ol>
+<li>注册github账号 地址： <a href="https://github.com/" target="_blank" rel="noopener">github</a>;</li>
+</ol>
+<ol start="2">
+<li>创建一个new repository，名称为 yourname.github.io, 其中yourname是你的github名称，按照这个规则创建才有用哦<br><img src="https://ws1.sinaimg.cn/large/a2f16a97ly1freh1a7e5aj20ku0aijs4.jpg" alt=""></li>
+</ol>
+<ol start="3">
+<li>按格式输入项目名称</li>
+</ol>
+<p><img src="https://ws1.sinaimg.cn/large/a2f16a97ly1freh03umxqj213q0wq0yc.jpg" alt=""></p>
+<ol start="4">
+<li>点击settings 创建一个page<br><img src="https://ws1.sinaimg.cn/large/a2f16a97ly1fregysvrsmj21oa0ts793.jpg" alt=""></li>
+</ol>
+<p></p>
+<ol start="5">
+<li>设置github pages</li>
+</ol>
+<p><img src="https://ws1.sinaimg.cn/large/a2f16a97ly1fregscurw6j215c0i0goe.jpg" alt=""></p>
+<p> 接下来将我们Hexo的代码部署到github上。</p>
+<ol start="6">
+<li>修改hexo站点的配置文件<br><img src="https://ws1.sinaimg.cn/large/a2f16a97ly1fregtiwqtej214y08mt9r.jpg" alt=""></li>
+</ol>
+<p>改成这样就好了，记得保存。<br>注意！！！冒号的后面一定一定一定要有一个空格！！</p>
+<ol start="7">
+<li><p>部署一下到github就好了</p>
+<pre><code>npm install hexo-deployer-git --save   
+</code></pre><p>//先装个插件压压惊<br>hexo d  //  部署的命令<br>发布你的第一篇博客<br>根目录下输入 ：</p>
+<p> hexo new “postName”<br> //hexo n 也可以<br> //你自己的博客名称，名为postName.md的文件会建在目<br> //录/blog/source/_posts下。<br>文章编辑完成后，终端在根目录文件夹下，执行如下命令来发布:<br>hexo g //生成静态页面<br>hexo d //发布<br>现在查看一下： 个人博客就创建成功了<br>已经发布上去咯。<br>参考链接</p>
+</li>
+<li><p><a href="https://geeksblog.cc/hexo-theme.html" target="_blank" rel="noopener">https://geeksblog.cc/hexo-theme.html</a>;</p>
+</li>
+<li><a href="https://blog.csdn.net/Hoshea_chx/article/details/78826689" target="_blank" rel="noopener">https://blog.csdn.net/Hoshea_chx/article/details/78826689</a></li>
+</ol>
+<p>作者：小样儿吧你<br>链接：<a href="https://juejin.im/post/5afba1f1518825428630ab72" target="_blank" rel="noopener">https://juejin.im/post/5afba1f1518825428630ab72</a><br>来源：掘金<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
 	<div class="article-tag tagcloud">
 		<i class="icon-price-tags icon"></i>
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">音乐</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">music</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">blog</a>
         		</li>
       		
 		</ul>
 	</div>
 
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/音乐//" class="article-tag-list-link color3">音乐</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
       
-        </div></section>
+	<div class="article-category tagcloud">
+		<i class="icon-book icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+
       
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2017/04/01/first/">展开全文 >></a>
+        </p>
       
-      <section class="archives-wrap">
-        <div class="archive-year-wrap">
-          <a href="/archives/2017" class="archive-year">2017</a>
-        </div>
-        <div class="archives">
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/11/09/seven/" class="archive-article-date">
-  	<time datetime="2017-11-09T14:17:02.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-09</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/11/09/seven/">海潮哥 ——《光明》</a>
-    </h1>
-  
 
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">音乐</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">music</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/音乐//" class="article-tag-list-link color3">音乐</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-        </div>
-        <div class="clearfix"></div>
-    </header>
+      
+      <div class="clearfix"></div>
+    </div>
   </div>
 </article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/11/01/six/" class="archive-article-date">
-  	<time datetime="2017-11-01T13:41:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-11-01</time>
-</a>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
         </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/11/01/six/">金志文 —— 《绝不呼救》</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">音乐</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">music</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/音乐//" class="article-tag-list-link color3">音乐</a>
-        		</li>
-      		
-		</ul>
-	</div>
+        
+        
+    </div>
+</aside>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
-  
-    
-    
-    <article class="archive-article archive-type-post">
-  <div class="archive-article-inner">
-    <header class="archive-article-header">
-      	<div class="article-meta">
-	      	<a href="/2017/10/30/five/" class="archive-article-date">
-  	<time datetime="2017-10-30T13:41:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-30</time>
-</a>
-        </div>
-    	 
-  
-    <h1 itemprop="name">
-      <a class="archive-article-title" href="/2017/10/30/five/">金志文 —— 《远走高飞》</a>
-    </h1>
-  
-
-        <div class="article-info info-on-right">
-          
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">音乐</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">music</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-          
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/音乐//" class="article-tag-list-link color3">音乐</a>
-        		</li>
-      		
-		</ul>
-	</div>
 
 
-        </div>
-        <div class="clearfix"></div>
-    </header>
-  </div>
-</article>
   
   
-    </div></section>
+    <nav id="page-nav">
+      <a class="extend prev" rel="prev" href="/">&laquo; Prev</a><a class="page-number" href="/">1</a><span class="page-number current">2</span>
+    </nav>
   
-
-    
 
 
           </div>
@@ -414,11 +330,11 @@
     <script>
 	var yiliaConfig = {
 		mathjax: false,
-		isHome: false,
+		isHome: true,
 		isPost: false,
 		isArchive: false,
 		isTag: false,
-		isCategory: true,
+		isCategory: false,
 		open_in_new: true,
 		toc_hide_index: true,
 		root: "/",

@@ -307,6 +307,135 @@ template-name:
 
 
   
+    <article id="post-eleven" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/06/13/eleven/">我了解的Nodejs？</a>
+    </h1>
+  
+
+        
+        <a href="/2018/06/13/eleven/" class="archive-article-date">
+  	<time datetime="2018-06-13T02:15:48.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-06-13</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="我了解的Nodejs？"><a href="#我了解的Nodejs？" class="headerlink" title="我了解的Nodejs？"></a>我了解的Nodejs？</h2><h3 id="一-什么是nodejs"><a href="#一-什么是nodejs" class="headerlink" title="一. 什么是nodejs"></a>一. 什么是nodejs</h3><ul>
+<li>nodejs是javascript的解析器</li>
+<li>nodejs是javascript的运行环境</li>
+<li>nodejs是一个服务器程序</li>
+<li>nodejs本身是V8引擎</li>
+<li>nodejs不是Web服务器</li>
+</ul>
+<h3 id="二-为什么要使用-nodejs"><a href="#二-为什么要使用-nodejs" class="headerlink" title="二. 为什么要使用 nodejs"></a>二. 为什么要使用 nodejs</h3><ul>
+<li>为了提高高性能的Web服务</li>
+<li>IO性能强大</li>
+<li>事件处理机制强大</li>
+<li>天然能够处理DOM</li>
+</ul>
+<h3 id="三、-nodejs的优势在哪里"><a href="#三、-nodejs的优势在哪里" class="headerlink" title="三、 nodejs的优势在哪里"></a>三、 nodejs的优势在哪里</h3><ul>
+<li>处理大流量的数据</li>
+<li>适合实时交互的应用</li>
+<li>完美支持对象数据库</li>
+<li>异步处理大量并发连接</li>
+</ul>
+<h3 id="四-一个简单的hello-world"><a href="#四-一个简单的hello-world" class="headerlink" title="四. 一个简单的hello world;"></a>四. 一个简单的hello world;</h3><p>在IDE里创建一个server.js；贴如下代码；<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">var http = require(&apos;http&apos;);</span><br><span class="line">http.createServer((req,res) =&gt; &#123;</span><br><span class="line">  // 定义响应头</span><br><span class="line">  res.writeHead(200,&#123;&apos;Content-Type&apos;:&apos;text/plan&apos;&#125;);</span><br><span class="line">  // 定义响应内容</span><br><span class="line">  res.end(&apos;hello world\n&apos;);</span><br><span class="line">&#125;).listen(3000);</span><br><span class="line">console.log(&apos;服务运行在3000端口了&apos;);</span><br></pre></td></tr></table></figure></p>
+<p>在terminal中输入  <strong>node server.js</strong>;<br>浏览器里输入localhost:3000; 即可看到输入的hello world;</p>
+<h3 id="五-Nodejs的回调函数"><a href="#五-Nodejs的回调函数" class="headerlink" title="五. Nodejs的回调函数"></a>五. Nodejs的回调函数</h3><p>什么是回调？</p>
+<ul>
+<li>函数的调用方式同步调用、回调、异步调用；；</li>
+<li>回调是一种双向调用模式；</li>
+<li>可以通过回调函数来实现回调</li>
+</ul>
+<p>nodejs的回调机制</p>
+<ul>
+<li>阻塞和非阻塞关注的是程序在等待调用的结果（消息，返回值）时的状态；</li>
+<li>阻塞就是做不完不准回来</li>
+<li>非阻塞就是你先做，我先看看有木有其他事儿，做完了告诉我一声；</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">// 阻塞代码</span><br><span class="line">var fs = require(&apos;fs&apos;);</span><br><span class="line">var data = fs.readFileSync(&apos;data.txt&apos;); readFileSync 同步读取文件</span><br><span class="line">console.log(data.toString()); // ABCDEF</span><br></pre></td></tr></table></figure>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 非阻塞代码</span><br><span class="line">var fs = require(&apos;fs&apos;);</span><br><span class="line">fs.readFile(&apos;data.txt&apos;,function (err, data) &#123;</span><br><span class="line">  if (err) &#123;</span><br><span class="line">    return console.error(err);</span><br><span class="line">  &#125; </span><br><span class="line">  console.log(data.toString());</span><br><span class="line">&#125;)</span><br><span class="line">console.log(&apos;程序执行完毕了&apos;);</span><br><span class="line">输出：</span><br><span class="line">程序执行完毕了</span><br><span class="line">ABCDEF</span><br></pre></td></tr></table></figure>
+<p>比较上述两代码片段，就知道，阻塞代码和非阻塞代码的区别了；</p>
+<h3 id="六、-Nodejs的事件驱动模型；"><a href="#六、-Nodejs的事件驱动模型；" class="headerlink" title="六、 Nodejs的事件驱动模型；"></a>六、 Nodejs的事件驱动模型；</h3><p><img src="https://user-gold-cdn.xitu.io/2018/7/7/16473d35c715a302?w=2198&amp;h=1160&amp;f=jpeg&amp;s=207493" alt=""></p>
+<p>事件处理代码流程</p>
+<ul>
+<li>引入events对象，创建eventEmitter对象；</li>
+<li>绑定事件处理程序</li>
+<li>触发事件</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">// 引入events对象，创建eventEmitter对象；</span><br><span class="line">var events = require(&apos;events&apos;);</span><br><span class="line">var eventEmitter = new events.EventEmitter();</span><br><span class="line">// 绑定事件处理函数</span><br><span class="line">var connetHandler = function connted() &#123;</span><br><span class="line">  console.log(&apos;connected被调用了&apos;);</span><br><span class="line">&#125;</span><br><span class="line">eventEmitter.on(&apos;connection&apos;, connetHandler); // 完成事件的绑定</span><br><span class="line">// 触发事件</span><br><span class="line">eventEmitter.emit(&apos;connection&apos;);</span><br><span class="line">console.log(&apos;程序执行完毕&apos;);</span><br><span class="line"></span><br><span class="line">输出：</span><br><span class="line">// connected被调用了</span><br><span class="line">// 程序执行完毕</span><br><span class="line">注意： 需要先完成事件的绑定.on(),然后才能触发事件.emit();</span><br></pre></td></tr></table></figure>
+<h3 id="七、-nodejs的模块化"><a href="#七、-nodejs的模块化" class="headerlink" title="七、 nodejs的模块化"></a>七、 nodejs的模块化</h3><p><img src="https://user-gold-cdn.xitu.io/2018/7/7/16473e5d7509c033?w=2194&amp;h=1136&amp;f=jpeg&amp;s=361993" alt=""></p>
+<h4 id="nodejs的模块加载流程"><a href="#nodejs的模块加载流程" class="headerlink" title="nodejs的模块加载流程"></a>nodejs的模块加载流程</h4><p><img src="https://user-gold-cdn.xitu.io/2018/7/7/16473e89dc75379e?w=900&amp;h=1128&amp;f=png&amp;s=331808" alt=""></p>
+<h4 id="nodejs的模块加载方式"><a href="#nodejs的模块加载方式" class="headerlink" title="nodejs的模块加载方式"></a>nodejs的模块加载方式</h4><ul>
+<li>从文件模块缓存区去加载</li>
+<li>从原生模块去加载</li>
+<li>从文件加载<br><img src="https://user-gold-cdn.xitu.io/2018/7/7/16473e79dd4c58ed?w=1738&amp;h=1136&amp;f=png&amp;s=2310548" alt=""></li>
+</ul>
+<p>代码示例 <br><br>hello模块   hello.js<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">// 模块的主要逻辑</span><br><span class="line">function hello() &#123;</span><br><span class="line">  var name;</span><br><span class="line">  this.setName = function (argName) &#123;</span><br><span class="line">    name = argName;</span><br><span class="line">  &#125;</span><br><span class="line">  this.sayHello = function () &#123;</span><br><span class="line">    console.log(&apos;Hello &apos;+ name);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br><span class="line">// 对模块进行导出</span><br><span class="line">module.exports = hello;</span><br></pre></td></tr></table></figure></p>
+<p>main.js<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 引入hello 模块；</span><br><span class="line">var hello = require(&apos;./hello&apos;);</span><br><span class="line">hi = new hello();</span><br><span class="line">hi.setName (&apos;rys&apos;);</span><br><span class="line">hi.sayHello();</span><br></pre></td></tr></table></figure></p>
+<p>然后执行node main.js <br><br>输出 hello rys;</p>
+<h3 id="八-nodejs路由"><a href="#八-nodejs路由" class="headerlink" title="八. nodejs路由"></a>八. nodejs路由</h3><p>戳这里 <a href="http://www.runoob.com/nodejs/nodejs-router.html" target="_blank" rel="noopener">nodejs路由</a>；</p>
+<h3 id="九-nodejs的全局对象"><a href="#九-nodejs的全局对象" class="headerlink" title="九. nodejs的全局对象"></a>九. nodejs的全局对象</h3><p>戳这里 <a href="http://www.runoob.com/nodejs/nodejs-global-object.html" target="_blank" rel="noopener">nodejs全局对象</a>；</p>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags icon"></i>
+		<ul class="article-tag-list">
+			 
+        		<li class="article-tag-list-item">
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color2">Nodejs</a>
+        		</li>
+      		
+		</ul>
+	</div>
+
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/06/13/eleven/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-ten" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -1394,153 +1523,10 @@ import &quot;module/lib/file&quot;;
 
 
   
-    <article id="post-first" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
   
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/04/01/first/">先学会走路————用Hexo + github搭建自己的博客！</a>
-    </h1>
-  
-
-        
-        <a href="/2017/04/01/first/" class="archive-article-date">
-  	<time datetime="2017-04-01T08:59:40.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-04-01</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p>用Hexo在本地搭建一个博客<br>所需环境 nodejs</p>
-<p>安装 <a href="https://nodejs.org/zh-cn/" target="_blank" rel="noopener">nodejs</a>；<br>安装 <a href="https://git-scm.com/downloads" target="_blank" rel="noopener">git</a><br>选择自己电脑对应的版本下载安装</p>
-<p>使用npm安装Hexo的脚手架工具 hexo-cli</p>
-<pre><code>npm install -g hexo-cli
-</code></pre><p>快速开始</p>
-<p>随便找个文件夹下打开终端,输入</p>
-<pre><code>hexo i blog  // init的缩写 blog是项目名
-cd blog   //切换到站点根目录
-npm install // 安装初始镜像包
-hexo g  //generetor的缩写
-hexo s //server的缩写
-</code></pre><p>打开浏览器输入localhost:4000查看：<br>这个就是hexo默认的博客主题。现在你已经可以在这个主题下写博客了。<br>当然，我是不喜欢这样的，幸好，github上有大量的主题可供选择，这里我选择使用nexT主题。<br>选择主题–nexT</p>
-<p>在根目录blog输入</p>
-<pre><code>git clone https://github.com/iissnan/hexo-theme-next
-</code></pre><p>完成后,这代表网站主题已经安装完成，这时候只需要自定义主题了，就找到thems/next下的 _config.yml, 这个就是主题的配置文件</p>
-<p>然后自定义自己的内容，找到thems字段，设置成next;</p>
-<p>在终端输入</p>
-<pre><code>hexo clean  //清除缓存
-hexo g  //重新生成代码
-hexo s  //部署到本地
-</code></pre><p>//然后打开浏览器访问 localhost:4000 查看效果</p>
-<p>nexT主题有三种选择，这个只是最简洁的一种，我们选择最好看的那个。<br>Muse - 默认 Scheme，这是 NexT 最初的版本，黑白主调，大量留白<br>Mist - Muse 的紧凑版本，整洁有序的单栏外观<br>Pisces - 双栏 Scheme，小家碧玉似的清新</p>
-<p>配置next</p>
-<p>当然，你完全可以进行很多的自定义设置甚至修改源码，定制自己的主题。更多的设置请移步官方文档 <a href="http://theme-next.iissnan.com/getting-started.html" target="_blank" rel="noopener">next主题设置</a></p>
-<p>将本地博客上传到github<br>话不多做，直接开始。<br>将博客部署到github</p>
-<ol>
-<li>注册github账号 地址： <a href="https://github.com/" target="_blank" rel="noopener">github</a>;</li>
-</ol>
-<ol start="2">
-<li>创建一个new repository，名称为 yourname.github.io, 其中yourname是你的github名称，按照这个规则创建才有用哦<br><img src="https://ws1.sinaimg.cn/large/a2f16a97ly1freh1a7e5aj20ku0aijs4.jpg" alt=""></li>
-</ol>
-<ol start="3">
-<li>按格式输入项目名称</li>
-</ol>
-<p><img src="https://ws1.sinaimg.cn/large/a2f16a97ly1freh03umxqj213q0wq0yc.jpg" alt=""></p>
-<ol start="4">
-<li>点击settings 创建一个page<br><img src="https://ws1.sinaimg.cn/large/a2f16a97ly1fregysvrsmj21oa0ts793.jpg" alt=""></li>
-</ol>
-<p></p>
-<ol start="5">
-<li>设置github pages</li>
-</ol>
-<p><img src="https://ws1.sinaimg.cn/large/a2f16a97ly1fregscurw6j215c0i0goe.jpg" alt=""></p>
-<p> 接下来将我们Hexo的代码部署到github上。</p>
-<ol start="6">
-<li>修改hexo站点的配置文件<br><img src="https://ws1.sinaimg.cn/large/a2f16a97ly1fregtiwqtej214y08mt9r.jpg" alt=""></li>
-</ol>
-<p>改成这样就好了，记得保存。<br>注意！！！冒号的后面一定一定一定要有一个空格！！</p>
-<ol start="7">
-<li><p>部署一下到github就好了</p>
-<pre><code>npm install hexo-deployer-git --save   
-</code></pre><p>//先装个插件压压惊<br>hexo d  //  部署的命令<br>发布你的第一篇博客<br>根目录下输入 ：</p>
-<p> hexo new “postName”<br> //hexo n 也可以<br> //你自己的博客名称，名为postName.md的文件会建在目<br> //录/blog/source/_posts下。<br>文章编辑完成后，终端在根目录文件夹下，执行如下命令来发布:<br>hexo g //生成静态页面<br>hexo d //发布<br>现在查看一下： 个人博客就创建成功了<br>已经发布上去咯。<br>参考链接</p>
-</li>
-<li><p><a href="https://geeksblog.cc/hexo-theme.html" target="_blank" rel="noopener">https://geeksblog.cc/hexo-theme.html</a>;</p>
-</li>
-<li><a href="https://blog.csdn.net/Hoshea_chx/article/details/78826689" target="_blank" rel="noopener">https://blog.csdn.net/Hoshea_chx/article/details/78826689</a></li>
-</ol>
-<p>作者：小样儿吧你<br>链接：<a href="https://juejin.im/post/5afba1f1518825428630ab72" target="_blank" rel="noopener">https://juejin.im/post/5afba1f1518825428630ab72</a><br>来源：掘金<br>著作权归作者所有。商业转载请联系作者获得授权，非商业转载请注明出处。</p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">hexo</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color5">blog</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/前端//" class="article-tag-list-link color3">前端</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/04/01/first/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
+    <nav id="page-nav">
+      <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
+    </nav>
   
 
 
@@ -1634,19 +1620,7 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
           <ul class="article-tag-list" q-show="showTags">
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color5">blog</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">音乐</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">music</a>
+                <a href="javascript:void(0)" class="js-tag color2">Nodejs</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1663,6 +1637,22 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
              
               <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">hexo</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color5">blog</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">音乐</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color1">music</a>
               </li>
              
               <li class="article-tag-list-item">
