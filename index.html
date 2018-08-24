@@ -157,6 +157,114 @@
           <div id="js-content" class="content-ll">
             
   
+    <article id="post-twelve" class="article article-type-post  article-index" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2018/08/24/twelve/">再说打日志你不会，pm2 + log4js，你值得拥有</a>
+    </h1>
+  
+
+        
+        <a href="/2018/08/24/twelve/" class="archive-article-date">
+  	<time datetime="2018-08-24T09:10:25.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2018-08-24</time>
+</a>
+        
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <p>最近接了个新需求，让在服务器通过Nodejs去打日志文件，捕捉请求日志。。。<br><br>然后我就想到了log4js……</p>
+<p>废话不多说，上代码</p>
+<h2 id="安装log4js"><a href="#安装log4js" class="headerlink" title="安装log4js"></a>安装log4js</h2><pre><code>npm install log4js --save
+</code></pre><p>对log4js不熟的查看文档 <a href="https://www.npmjs.com/package/log4js" target="_blank" rel="noopener">log4js</a>;</p>
+<h3 id="在config文件夹下新建log-config-js文件："><a href="#在config文件夹下新建log-config-js文件：" class="headerlink" title="在config文件夹下新建log_config.js文件："></a>在config文件夹下新建log_config.js文件：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br></pre></td><td class="code"><pre><span class="line">var log4js = require(&quot;log4js&quot;);</span><br><span class="line">var path = require(&quot;path&quot;);</span><br><span class="line">var fs = require(&quot;fs&quot;);</span><br><span class="line">var basePath = path.resolve(__dirname, &quot;../logs&quot;);</span><br><span class="line"></span><br><span class="line">var errorPath = basePath + &quot;/errors/&quot;;</span><br><span class="line">var resPath = basePath + &quot;/responses/&quot;;</span><br><span class="line"></span><br><span class="line">var errorFilename = errorPath + &quot;/error&quot;;</span><br><span class="line">var resFilename = resPath + &quot;/response&quot;;</span><br><span class="line"></span><br><span class="line">/**</span><br><span class="line"> * 确定目录是否存在，如果不存在则创建目录</span><br><span class="line"> */</span><br><span class="line">var confirmPath = function(pathStr) &#123;</span><br><span class="line">  if (!fs.existsSync(pathStr)) &#123;</span><br><span class="line">    fs.mkdirSync(pathStr);</span><br><span class="line">    console.log(&quot;createPath: &quot; + pathStr);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line">log4js.configure(&#123;</span><br><span class="line">  appenders: &#123;</span><br><span class="line">    errorLog: &#123;</span><br><span class="line">      type: &quot;dateFile&quot;, //日志类型</span><br><span class="line">      filename: errorFilename, //日志输出位置</span><br><span class="line">      alwaysIncludePattern: true, //是否总是有后缀名</span><br><span class="line">      pattern: &quot;-yyyy-MM-dd.log&quot; //后缀，每小时创建一个新的日志文件</span><br><span class="line">    &#125;,</span><br><span class="line">    responseLog: &#123;</span><br><span class="line">      type: &quot;dateFile&quot;,</span><br><span class="line">      filename: resFilename,</span><br><span class="line">      alwaysIncludePattern: true,</span><br><span class="line">      pattern: &quot;-yyyy-MM-dd.log&quot;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  categories: &#123;</span><br><span class="line">    errorLog: &#123; appenders: [&apos;errorLog&apos;], level: &apos;error&apos; &#125;,</span><br><span class="line">    responseLog: &#123; appenders: [&quot;responseLog&quot;], level: &quot;info&quot; &#125;,</span><br><span class="line">    default: &#123; appenders: [&apos;responseLog&apos;,&apos;errorLog&apos;,], level: &apos;trace&apos; &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  // pm2: true,</span><br><span class="line">  // pm2InstanceVar: &apos;INSTANCE_ID&apos;,</span><br><span class="line">  disableClustering: true</span><br><span class="line">&#125;);</span><br><span class="line">//创建log的根目录&apos;logs&apos;</span><br><span class="line">if (basePath) &#123;</span><br><span class="line">  confirmPath(basePath);</span><br><span class="line">  //根据不同的logType创建不同的文件目录</span><br><span class="line">  confirmPath(errorPath);</span><br><span class="line">  confirmPath(resPath);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">module.exports = log4js;</span><br></pre></td></tr></table></figure>
+<p>这段代码中有解释，照着官方文档配置就行；</p>
+<h3 id="在config文件夹下新建log-js文件："><a href="#在config文件夹下新建log-js文件：" class="headerlink" title="在config文件夹下新建log.js文件："></a>在config文件夹下新建log.js文件：</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br></pre></td><td class="code"><pre><span class="line">var log4js = require(&quot;./log_config&quot;);</span><br><span class="line"></span><br><span class="line">var errorLog = log4js.getLogger(&quot;errorLog&quot;); //此处使用category的值</span><br><span class="line">var resLog = log4js.getLogger(&quot;responseLog&quot;); //此处使用category的值</span><br><span class="line"></span><br><span class="line">var log = &#123;&#125;;</span><br><span class="line">log.i = function(req, resTime) &#123;</span><br><span class="line">  if (req) &#123;</span><br><span class="line">    resLog.info(formatRes(req, resTime));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">log.e = function(ctx, error, resTime) &#123;</span><br><span class="line">  if (ctx &amp;&amp; error) &#123;</span><br><span class="line">    errorLog.error(formatError(ctx, error, resTime));</span><br><span class="line">  &#125;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//格式化请求日志</span><br><span class="line">var formatReqLog = function(req, resTime) &#123;</span><br><span class="line"></span><br><span class="line">  let getClientIp = function (req) &#123;</span><br><span class="line">    return req.headers[&apos;x-forwarded-for&apos;] ||</span><br><span class="line">      req.connection.remoteAddress ||</span><br><span class="line">      req.socket.remoteAddress ||</span><br><span class="line">      req.connection.socket.remoteAddress || &apos;&apos;;</span><br><span class="line">  &#125;;</span><br><span class="line">  let ip = getClientIp(req).match(/\d+.\d+.\d+.\d+/);</span><br><span class="line"></span><br><span class="line">  var logText = new String();</span><br><span class="line">  //访问方法</span><br><span class="line">  var method = req.method;</span><br><span class="line">  logText += &quot;request method: &quot; + method + &quot;\n&quot;;</span><br><span class="line">  //请求原始地址</span><br><span class="line"></span><br><span class="line">  logText += &quot;request originalUrl:  &quot; + req.originalUrl + &quot;\n&quot;;</span><br><span class="line">  //客户端ip</span><br><span class="line">  logText += &quot;request client ip:  &quot; + ip + &quot;\n&quot;;</span><br><span class="line">  </span><br><span class="line">  //请求参数</span><br><span class="line">  if (method === &quot;GET&quot;) &#123;</span><br><span class="line">    logText += &quot;request query:  &quot; + JSON.stringify(req.query) + &quot;\n&quot;;</span><br><span class="line">  &#125; else &#123;</span><br><span class="line">    logText += &quot;request body: &quot; + &quot;\n&quot; + JSON.stringify(req.body) + &quot;\n&quot;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  //服务器响应时间</span><br><span class="line">  logText += &quot;response time: &quot; + resTime + &quot;\n&quot;;</span><br><span class="line"></span><br><span class="line">  return logText;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//格式化响应日志</span><br><span class="line">var formatRes = function(res, resTime) &#123;</span><br><span class="line">  var logText = new String();</span><br><span class="line">  //响应日志开始</span><br><span class="line">  logText += &quot;\n&quot; + &quot;*************** response log start ***************&quot; + &quot;\n&quot;;</span><br><span class="line"></span><br><span class="line">  //添加请求日志</span><br><span class="line">  logText += formatReqLog(res, resTime);</span><br><span class="line"></span><br><span class="line">  //响应状态码</span><br><span class="line">  logText += &quot;response status: &quot; + res.res.statusCode + &quot;\n&quot;;</span><br><span class="line"></span><br><span class="line">  //响应内容</span><br><span class="line">  logText += &quot;response body: &quot; + &quot;\n&quot; + JSON.stringify(res.body) + &quot;\n&quot;;</span><br><span class="line"></span><br><span class="line">  //响应日志结束</span><br><span class="line">  logText += &quot;*************** response log end ***************&quot; + &quot;\n&quot;;</span><br><span class="line"></span><br><span class="line">  return logText;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">//格式化错误日志</span><br><span class="line">var formatError = function(ctx, err, resTime) &#123;</span><br><span class="line">  var logText = new String();</span><br><span class="line"></span><br><span class="line">  //错误信息开始</span><br><span class="line">  logText += &quot;\n&quot; + &quot;*************** error log start ***************&quot; + &quot;\n&quot;;</span><br><span class="line"></span><br><span class="line">  //添加请求日志</span><br><span class="line">  logText += formatReqLog(ctx, resTime);</span><br><span class="line"></span><br><span class="line">  //错误名称</span><br><span class="line"></span><br><span class="line">  logText += &quot;err name: &quot; + err.name + &quot;\n&quot;;</span><br><span class="line">  //错误信息</span><br><span class="line"></span><br><span class="line">  logText += &quot;err message: &quot; + err.message + &quot;\n&quot;;</span><br><span class="line">  //错误详情</span><br><span class="line"></span><br><span class="line">  logText += &quot;err stack: &quot; + err.stack + &quot;\n&quot;;</span><br><span class="line"></span><br><span class="line">  //错误信息结束</span><br><span class="line">  logText += &quot;*************** error log end ***************&quot; + &quot;\n&quot;;</span><br><span class="line"></span><br><span class="line">  return logText;</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">module.exports = log;</span><br></pre></td></tr></table></figure>
+<p>这里边就是写个三个函数，</p>
+<ol>
+<li>格式化请求日志  formatReqLog；</li>
+<li>格式化响应日志  formatRes；</li>
+<li>格式化错误日志  formatError；</li>
+</ol>
+<h3 id="在app-js中配置使用"><a href="#在app-js中配置使用" class="headerlink" title="在app.js中配置使用"></a>在app.js中配置使用</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line">const log = require(&quot;./config/log&quot;);</span><br><span class="line">// logger</span><br><span class="line">app.all(&quot;*&quot;, async (req, res, next) =&gt; &#123;</span><br><span class="line">  //响应开始时间</span><br><span class="line">  const start = new Date();</span><br><span class="line">  //响应间隔时间</span><br><span class="line">  var ms;</span><br><span class="line">  ms = new Date() - start;</span><br><span class="line">  try &#123;</span><br><span class="line">    //开始进入到下一个中间件</span><br><span class="line">    await next();</span><br><span class="line">    //记录响应日志</span><br><span class="line">    log.i(req, ms);</span><br><span class="line">  &#125; catch (error) &#123;</span><br><span class="line">    //记录异常日志</span><br><span class="line">    log.e(req, error, ms);</span><br><span class="line">  &#125;</span><br><span class="line">  console.log(`$&#123;req.method&#125; $&#123;req.url&#125; - $&#123;ms&#125;ms-$&#123;res.statusCode&#125;`);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>代码没啥可讲的，照着使用就行，这里我来谈谈踩过的坑吧</p>
+<h2 id="故障1：-pm2-log4js启动项目时候报错"><a href="#故障1：-pm2-log4js启动项目时候报错" class="headerlink" title="故障1： pm2 + log4js启动项目时候报错"></a>故障1： pm2 + log4js启动项目时候报错</h2><p>Nodejs application Error: bind EADDRINUSE when use pm2 deploy</p>
+<pre><code>sudo lsof -i -P | grep 3000
+</code></pre><p> <a href="https://stackoverflow.com/questions/18687877/nodejs-application-error-bind-eaddrinuse-when-use-pm2-deploy" target="_blank" rel="noopener">解决该问题戳这里</a>；</p>
+<h2 id="故障2：-log4js搭配pm2集群异常日志"><a href="#故障2：-log4js搭配pm2集群异常日志" class="headerlink" title="故障2： log4js搭配pm2集群异常日志"></a>故障2： log4js搭配pm2集群异常日志<br></h2><p> 参考如下链接：<a href="https://log4js-node.github.io/log4js-node/clustering.html" target="_blank" rel="noopener">log4js搭配pm2集群异常日志的解决方案</a><br></p>
+<p> 这是pm2在cluster模式下启动，导致log4js不正常输出日志，有两种解决方案吗，</p>
+<ol>
+<li><p>只需要在log_config.js里添加如下命令就行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">disableClustering: true</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>i. 安装pm2的<code>pm2-intercom</code>进程间通信模块<br><br>ii. 然后需要在log_config.js里添加如下命令就行</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">pm2: true,</span><br><span class="line">pm2InstanceVar: &apos;INSTANCE_ID&apos;</span><br></pre></td></tr></table></figure>
+<p>iii. pm2.json 如下</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"> &#123; &quot;apps&quot;: [</span><br><span class="line">    &#123; &quot;name&quot;: &quot;testing&quot;,</span><br><span class="line">      &quot;script&quot;: &quot;pm2.js&quot;,</span><br><span class="line">      &quot;instances&quot;: 0,</span><br><span class="line">      &quot;instance_var&quot;: &quot;INSTANCE_ID&quot;, // 添加这一行</span><br><span class="line">      &quot;exec_mode&quot;: &quot;cluster&quot;</span><br><span class="line">      &#125;</span><br><span class="line">    ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>两种解决方法的区别是：(摘自log4js作者的原话,能得到他的帮助，我特开心😊)</p>
+<pre><code>you don’t need `disableClustering` and `pm2` in your config.
+`pm2: true` turns on support for using pm2-intercom, `disableClustering: true` turns off all clustering support so it won’t use pm2-intercom.
+Use one or the other, but not both.
+</code></pre><p><img src="https://user-gold-cdn.xitu.io/2018/8/24/1656b22e68787e0e?w=1127&amp;h=105&amp;f=png&amp;s=32324" alt=""></p>
+<h3 id="部署到服务器上就能正常输出日志了，如下"><a href="#部署到服务器上就能正常输出日志了，如下" class="headerlink" title="部署到服务器上就能正常输出日志了，如下"></a>部署到服务器上就能正常输出日志了，如下</h3><p><img src="https://user-gold-cdn.xitu.io/2018/8/24/1656b2454edb6144?w=673&amp;h=585&amp;f=png&amp;s=90516" alt=""></p>
+<p>欢迎沟通交流<br><br><img src="https://user-gold-cdn.xitu.io/2018/6/19/16417078c2513e99"></p>
+<p>最后参考文章如下：</p>
+<h2 id="官方文档链接"><a href="#官方文档链接" class="headerlink" title="官方文档链接"></a>官方文档链接</h2><p> <a href="https://pm2.io/doc/en/runtime/guide/installation/" target="_blank" rel="noopener">pm2官方文档</a><br><br> <a href="https://www.zhaokeli.com/article/8312.html" target="_blank" rel="noopener">pm2的用法解析</a></p>
+<h2 id="log4js"><a href="#log4js" class="headerlink" title="log4js"></a>log4js</h2><ol>
+<li><a href="http://www.wangweilin.net/static/pages/log4js-node.html" target="_blank" rel="noopener">log4js译文</a>；</li>
+<li><a href="https://log4js-node.github.io/log4js-node/clustering.html" target="_blank" rel="noopener">log4js搭配pm2集群异常日志的解决方案</a></li>
+<li><a href="https://segmentfault.com/a/1190000011988772" target="_blank" rel="noopener">PM2 &amp;&amp; log4js &amp;&amp; winston 日志管理</a></li>
+<li><a href="https://blog.csdn.net/scaleqiao/article/details/45153379" target="_blank" rel="noopener">vim的命令</a>;</li>
+<li><a href="https://panmin.github.io/2017/06/12/node.js%E9%A1%B9%E7%9B%AE%E4%B8%AD%E4%BD%BF%E7%94%A8log4js%E4%BF%9D%E5%AD%98%E6%97%A5%E5%BF%97%E6%96%87%E4%BB%B6/" target="_blank" rel="noopener">log4js的配置</a>；</li>
+</ol>
+
+      
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      
+      
+
+      
+        <p class="article-more-link">
+          <a class="article-more-a" href="/2018/08/24/twelve/">展开全文 >></a>
+        </p>
+      
+
+      
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+<aside class="wrap-side-operation">
+    <div class="mod-side-operation">
+        
+        <div class="jump-container" id="js-jump-container" style="display:none;">
+            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
+                <i class="icon-font icon-back"></i>
+            </a>
+            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
+                <i class="icon-font icon-plane jump-plane"></i>
+            </div>
+        </div>
+        
+        
+    </div>
+</aside>
+
+
+
+
+  
     <article id="post-eight" class="article article-type-post  article-index" itemscope itemprop="blogPost">
   <div class="article-inner">
     
@@ -255,7 +363,7 @@ template-name:
 		<ul class="article-tag-list">
 			 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">前端</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
@@ -263,11 +371,11 @@ template-name:
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">vue-cli</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">前端</a>
         		</li>
       		 
         		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">webpack</a>
+        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">vue-cli</a>
         		</li>
       		
 		</ul>
@@ -1420,109 +1528,6 @@ import &quot;module/lib/file&quot;;
 
 
   
-    <article id="post-five" class="article article-type-post  article-index" itemscope itemprop="blogPost">
-  <div class="article-inner">
-    
-      <header class="article-header">
-        
-  
-    <h1 itemprop="name">
-      <a class="article-title" href="/2017/10/30/five/">金志文 —— 《远走高飞》</a>
-    </h1>
-  
-
-        
-        <a href="/2017/10/30/five/" class="archive-article-date">
-  	<time datetime="2017-10-30T13:41:15.000Z" itemprop="datePublished"><i class="icon-calendar icon"></i>2017-10-30</time>
-</a>
-        
-      </header>
-    
-    <div class="article-entry" itemprop="articleBody">
-      
-        <p style="color: green;font-size: 16px;"><br>  halo,小伙伴儿们，今日起，该公众号正式为大家每日优选金曲，定于每晚9点30分，为大家推送一首很feeling的歌曲，小编认为，没有什么糟糕的心情是一首歌曲缓解不了的，如果有，那就来两首~~~<br></p> 
-
-
-
-<p style="color: green;"><br>  OK，进入正题，今天第一天，为大家推荐的是一首来自金志文的开篇之作——《远走高飞》，该歌曲是王耀光作词，金志文作曲、编曲并演唱的一首歌曲，发行于2017年04月27日，是金志文的开篇之作，曲风明快跳跃，犹如清风袭面，歌词的描述仿佛能看到旅途中的风景，每个韵脚完美的配合发音更具口感，使得听觉达到更好的效果。<br></p> 
-
-
-<h3 id="音乐-地址："><a href="#音乐-地址：" class="headerlink" title="音乐 地址："></a>音乐 地址：</h3><p><strong><a href="https://y.qq.com/n/yqq/song/201949026_num.html?ADTAG=h5_playsong&amp;no_redirect=1" target="_blank" rel="noopener">远走高飞</a></strong></p>
-<h4 id="看着歌词，哼起来吧"><a href="#看着歌词，哼起来吧" class="headerlink" title="看着歌词，哼起来吧~"></a>看着歌词，哼起来吧~</h4><p style="color: green;font-size: 16px; font-weight: bold;"><br>  我的脚踏遍天南和地北<br><br>  日晒或是风吹 我都无所谓<br><br>  路边那朵蔷薇 鲜红的纯粹<br><br>  关掉了手机管他谁是谁<br><br>  不要去理会是是与非非<br><br>  天亮走到天黑 从不觉疲惫<br><br>  黄昏中的堡垒 多颓废<br><br>  如果迎着风就飞<br><br>  俯瞰这世界有多美<br><br>  让烦恼都灰飞<br><br>  别去理会自我藉慰<br><br>  如果还有梦就追<br><br>  至少不会遗憾后悔<br><br>  迎着光勇敢追<br><br>  远走高飞 说走就走一回<br><br><br>  翻过了山坡又踏过了水<br><br>  跟心走别管东南和西北<br><br>  前行或是后退 靠直觉发挥<br><br>  日落下的余晖 有一点凄美<br><br>  拥挤的城市布满了虚伪<br><br>  何必去辩解谁错或是对<br><br>  就让一切回归 童真的滋味<br><br>  那自由的感觉 不会累<br><br>  如果迎着风就飞<br><br>  俯瞰这世界有多美<br><br>  让烦恼都灰飞<br><br>  别去理会自我藉慰<br><br>  如果还有梦就追<br><br>  至少不会遗憾后悔<br><br>  迎着光勇敢追<br><br>  远走高飞 说走就走一回<br><br><br>  如果迎着风就飞<br><br>  俯瞰这世界有多美<br><br>  让烦恼都灰飞<br><br>  别去理会自我藉慰<br><br>  如果还有梦就追<br><br>  至少不会遗憾后悔<br><br>  迎着光勇敢追<br><br>  远走高飞 说走就走一回<br><br></p>
-
-
-<p>小编认为，没有mv的muisc不是好音乐，看着mv，身临其境，用心体会歌曲的感觉，才是最大的快乐~</p>
-<pre><code>MV地址：
-</code></pre><p>  <strong><a href="https://v.qq.com/x/page/e0567en7qhm.html" target="_blank" rel="noopener">远走高飞</a></strong></p>
-<p><img src="https://ws1.sinaimg.cn/large/a2f16a97ly1frfu81hxc7j20m80m841p.jpg" alt=""></p>
-
-      
-
-      
-    </div>
-    <div class="article-info article-info-index">
-      
-      
-	<div class="article-tag tagcloud">
-		<i class="icon-price-tags icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color3">音乐</a>
-        		</li>
-      		 
-        		<li class="article-tag-list-item">
-        			<a href="javascript:void(0)" class="js-tag article-tag-list-link color1">music</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-      
-	<div class="article-category tagcloud">
-		<i class="icon-book icon"></i>
-		<ul class="article-tag-list">
-			 
-        		<li class="article-tag-list-item">
-        			<a href="/categories/音乐//" class="article-tag-list-link color3">音乐</a>
-        		</li>
-      		
-		</ul>
-	</div>
-
-
-      
-        <p class="article-more-link">
-          <a class="article-more-a" href="/2017/10/30/five/">展开全文 >></a>
-        </p>
-      
-
-      
-      <div class="clearfix"></div>
-    </div>
-  </div>
-</article>
-
-<aside class="wrap-side-operation">
-    <div class="mod-side-operation">
-        
-        <div class="jump-container" id="js-jump-container" style="display:none;">
-            <a href="javascript:void(0)" class="mod-side-operation__jump-to-top">
-                <i class="icon-font icon-back"></i>
-            </a>
-            <div id="js-jump-plan-container" class="jump-plan-container" style="top: -11px;">
-                <i class="icon-font icon-plane jump-plane"></i>
-            </div>
-        </div>
-        
-        
-    </div>
-</aside>
-
-
-
-
-  
   
     <nav id="page-nav">
       <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/">Next &raquo;</a>
@@ -1624,19 +1629,11 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">前端</a>
+                <a href="javascript:void(0)" class="js-tag color3">音乐</a>
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color4">vue</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">vue-cli</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+                <a href="javascript:void(0)" class="js-tag color1">music</a>
               </li>
              
               <li class="article-tag-list-item">
@@ -1648,14 +1645,6 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color3">音乐</a>
-              </li>
-             
-              <li class="article-tag-list-item">
-                <a href="javascript:void(0)" class="js-tag color1">music</a>
-              </li>
-             
-              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color5">http</a>
               </li>
              
@@ -1664,7 +1653,23 @@ return o(i(t),arguments.length<2?void 0:u(arguments[1]))}})},function(t,n,r){var
               </li>
              
               <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">webpack</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color4">vue</a>
+              </li>
+             
+              <li class="article-tag-list-item">
                 <a href="javascript:void(0)" class="js-tag color3">源码</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">前端</a>
+              </li>
+             
+              <li class="article-tag-list-item">
+                <a href="javascript:void(0)" class="js-tag color3">vue-cli</a>
               </li>
             
             <div class="clearfix"></div>
